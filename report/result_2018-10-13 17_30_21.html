@@ -1,0 +1,1404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SAAS自动化测试报告</title>
+    <meta name="generator" content="HTMLTestRunner 0.9.1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.common.min.js"></script>
+    <!-- <script type="text/javascript" src="js/echarts.common.min.js"></script> -->
+    
+    
+<style type="text/css" media="screen">
+    body        { font-family: Microsoft YaHei,Consolas,arial,sans-serif; font-size: 80%; }
+    table       { font-size: 100%; }
+    pre         { white-space: pre-wrap;word-wrap: break-word; }
+
+    /* -- heading ---------------------------------------------------------------------- */
+    h1 {
+        font-size: 16pt;
+        color: gray;
+    }
+    .heading {
+        margin-top: 0ex;
+        margin-bottom: 1ex;
+    }
+
+    .heading .attribute {
+        margin-top: 1ex;
+        margin-bottom: 0;
+    }
+
+    .heading .description {
+        margin-top: 2ex;
+        margin-bottom: 3ex;
+    }
+
+    /* -- css div popup ------------------------------------------------------------------------ */
+    a.popup_link {
+    }
+
+    a.popup_link:hover {
+        color: red;
+    }
+
+    .popup_window {
+        display: none;
+        position: relative;
+        left: 0px;
+        top: 0px;
+        /*border: solid #627173 1px; */
+        padding: 10px;
+        /*background-color: #E6E6D6; */
+        font-family: "Lucida Console", "Courier New", Courier, monospace;
+        text-align: left;
+        font-size: 8pt;
+        /* width: 500px;*/
+    }
+
+    }
+    /* -- report ------------------------------------------------------------------------ */
+    #show_detail_line {
+        margin-top: 3ex;
+        margin-bottom: 1ex;
+    }
+    #result_table {
+        width: 99%;
+    }
+    #header_row {
+        font-weight: bold;
+        color: #303641;
+        background-color: #ebebeb;
+    }
+    #total_row  { font-weight: bold; }
+    .passClass  { background-color: #bdedbc; }
+    .failClass  { background-color: #ffefa4; }
+    .errorClass { background-color: #ffc9c9; }
+    .passCase   { color: #6c6; }
+    .failCase   { color: #FF6600; font-weight: bold; }
+    .errorCase  { color: #c00; font-weight: bold; }
+    .hiddenRow  { display: none; }
+    .testcase   { margin-left: 2em; }
+
+
+    /* -- ending ---------------------------------------------------------------------- */
+    #ending {
+    }
+
+    #div_base {
+                position:absolute;
+                top:0%;
+                left:5%;
+                right:5%;
+                width: auto;
+                height: auto;
+                margin: -15px 0 0 0;
+    }
+</style>
+
+    
+</head>
+<body>
+    <script language="javascript" type="text/javascript"><!--
+    output_list = Array();
+
+    /* level - 0:Summary; 1:Failed; 2:All */
+    function showCase(level) {
+        trs = document.getElementsByTagName("tr");
+        for (var i = 0; i < trs.length; i++) {
+            tr = trs[i];
+            id = tr.id;
+            if (id.substr(0,2) == 'ft') {
+                if (level < 1) {
+                    tr.className = 'hiddenRow';
+                }
+                else {
+                    tr.className = '';
+                }
+            }
+            if (id.substr(0,2) == 'pt') {
+                if (level > 1) {
+                    tr.className = '';
+                }
+                else {
+                    tr.className = 'hiddenRow';
+                }
+            }
+        }
+    }
+
+
+    function showClassDetail(cid, count) {
+        var id_list = Array(count);
+        var toHide = 1;
+        for (var i = 0; i < count; i++) {
+            tid0 = 't' + cid.substr(1) + '.' + (i+1);
+            tid = 'f' + tid0;
+            tr = document.getElementById(tid);
+            if (!tr) {
+                tid = 'p' + tid0;
+                tr = document.getElementById(tid);
+            }
+            id_list[i] = tid;
+            if (tr.className) {
+                toHide = 0;
+            }
+        }
+        for (var i = 0; i < count; i++) {
+            tid = id_list[i];
+            if (toHide) {
+                document.getElementById('div_'+tid).style.display = 'none'
+                document.getElementById(tid).className = 'hiddenRow';
+            }
+            else {
+                document.getElementById(tid).className = '';
+            }
+        }
+    }
+
+
+    function showTestDetail(div_id){
+        var details_div = document.getElementById(div_id)
+        var displayState = details_div.style.display
+        // alert(displayState)
+        if (displayState != 'block' ) {
+            displayState = 'block'
+            details_div.style.display = 'block'
+        }
+        else {
+            details_div.style.display = 'none'
+        }
+    }
+
+
+    function html_escape(s) {
+        s = s.replace(/&/g,'&amp;');
+        s = s.replace(/</g,'&lt;');
+        s = s.replace(/>/g,'&gt;');
+        return s;
+    }
+
+    /* obsoleted by detail in <div>
+    function showOutput(id, name) {
+        var w = window.open("", //url
+                        name,
+                        "resizable,scrollbars,status,width=800,height=450");
+        d = w.document;
+        d.write("<pre>");
+        d.write(html_escape(output_list[id]));
+        d.write("\n");
+        d.write("<a href='javascript:window.close()'>close</a>\n");
+        d.write("</pre>\n");
+        d.close();
+    }
+    */
+    --></script>
+
+    <div id="div_base">
+        
+    <div class='page-header'>
+        <h1>SAAS自动化测试报告</h1>
+    <p class='attribute'><strong>开始时间:</strong> 2018-10-13 17:30:21</p>
+<p class='attribute'><strong>运行时长:</strong> 0:07:40.390239</p>
+<p class='attribute'><strong>状态:</strong> 通过 59 错误 19</p>
+
+    </div>
+    <div style="float: left;width:50%;"><p class='description'>用例执行情况:</p></div>
+    <div id="chart" style="width:50%;height:400px;float:left;"></div>
+
+        
+    <div class="btn-group btn-group-sm">
+        <button class="btn btn-default" onclick='javascript:showCase(0)'>总结</button>
+        <button class="btn btn-default" onclick='javascript:showCase(1)'>失败</button>
+        <button class="btn btn-default" onclick='javascript:showCase(2)'>全部</button>
+    </div>
+    <p></p>
+    <table id='result_table' class="table table-bordered">
+        <colgroup>
+            <col align='left' />
+            <col align='right' />
+            <col align='right' />
+            <col align='right' />
+            <col align='right' />
+            <col align='right' />
+        </colgroup>
+        <tr id='header_row'>
+            <td>测试套件/测试用例</td>
+            <td>总数</td>
+            <td>通过</td>
+            <td>失败</td>
+            <td>错误</td>
+            <td>查看</td>
+        </tr>
+        
+    <tr class='errorClass'>
+        <td>test_A_frontDeskFunction.test_d_vipcardManage.VipCardManage: 会员卡管理测试</td>
+        <td>16</td>
+        <td>3</td>
+        <td>0</td>
+        <td>13</td>
+        <td><a href="javascript:showClassDetail('c1',16)">详情</a></td>
+    </tr>
+
+<tr id='pt1.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_edit_limitcard: 时效卡编辑测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt1.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_renew_limitcard: 时效卡续卡测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt1.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_passon_limitcard: 时效卡转卡测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='ft1.4' class='none'>
+    <td class='errorCase'><div class='testcase'>test_D_stop_limitcard: 时效卡停卡测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.4')" >
+        错误</a>
+
+    <div id='div_ft1.4' class="popup_window">
+        <pre>ft1.4: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 47, in test_D_stop_limitcard
+    VipCard(self.driver).D_stop_limitcard(self.start_date, self.end_date, self.num[2:4])
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 50, in D_stop_limitcard
+    EleManage().located_by_xpath(self.driver, self.ele['时效卡更多']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;button data-v-3166c1e4="" type="button" class="el-button el-button--default el-button--mini is-plain el-dropdown-selfdefine  " aria-haspopup="list" aria-controls="dropdown-menu-5250" role="button" tabindex="0"&gt;...&lt;/button&gt; is not clickable at point (1832, 472). Other element would receive the click: &lt;div data-v-6b3d69de="" data-v-3166c1e4="" class="el-dialog__wrapper transferCardDialog customizeDetailsDialog" style="z-index: 2015;"&gt;...&lt;/div&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.5' class='none'>
+    <td class='errorCase'><div class='testcase'>test_E_delete_limitcard: 时效卡删除测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.5')" >
+        错误</a>
+
+    <div id='div_ft1.5' class="popup_window">
+        <pre>ft1.5: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 51, in test_E_delete_limitcard
+    VipCard(self.driver).E_delete_limitcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 63, in E_delete_limitcard
+    EleManage().located_by_xpath(self.driver, self.ele['时效卡更多']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;button data-v-3166c1e4="" type="button" class="el-button el-button--default el-button--mini is-plain el-dropdown-selfdefine  " aria-haspopup="list" aria-controls="dropdown-menu-5250" role="button" tabindex="0"&gt;...&lt;/button&gt; is not clickable at point (1832, 472). Other element would receive the click: &lt;div data-v-6b3d69de="" data-v-3166c1e4="" class="el-dialog__wrapper transferCardDialog customizeDetailsDialog" style="z-index: 2015;"&gt;...&lt;/div&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.6' class='none'>
+    <td class='errorCase'><div class='testcase'>test_F_activate_limitcard: 时效卡开卡测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.6')" >
+        错误</a>
+
+    <div id='div_ft1.6' class="popup_window">
+        <pre>ft1.6: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 55, in test_F_activate_limitcard
+    VipCard(self.driver).F_activate_limitcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 73, in F_activate_limitcard
+    EleManage().located_by_xpath(self.driver, self.ele['时效卡未开卡tab']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;div class="cursorbox"&gt;...&lt;/div&gt; is not clickable at point (999, 236). Other element would receive the click: &lt;input type="text" autocomplete="off" placeholder="请输入手机号码" class="el-input__inner"&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.7' class='none'>
+    <td class='errorCase'><div class='testcase'>test_G_remove_limitcard: 时效卡彻底删除测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.7')" >
+        错误</a>
+
+    <div id='div_ft1.7' class="popup_window">
+        <pre>ft1.7: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 59, in test_G_remove_limitcard
+    VipCard(self.driver).G_remove_limitcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 83, in G_remove_limitcard
+    EleManage().located_by_xpath(self.driver, self.ele['时效卡回收站tab']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;div class="cursorbox"&gt;...&lt;/div&gt; is not clickable at point (1521, 236). Other element would receive the click: &lt;button data-v-6b3d69de="" type="button" class="el-button el-button--default el-button--medium"&gt;...&lt;/button&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.8' class='none'>
+    <td class='errorCase'><div class='testcase'>test_H_recover_limitcard: 时效卡恢复测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.8')" >
+        错误</a>
+
+    <div id='div_ft1.8' class="popup_window">
+        <pre>ft1.8: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 63, in test_H_recover_limitcard
+    VipCard(self.driver).H_recover_limitcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 95, in H_recover_limitcard
+    EleManage().located_by_xpath(self.driver, self.ele['时效卡回收站-更多']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;button data-v-3166c1e4="" type="button" class="el-button el-button--default el-button--mini is-plain el-dropdown-selfdefine  " aria-haspopup="list" aria-controls="dropdown-menu-5250" role="button" tabindex="0"&gt;...&lt;/button&gt; is not clickable at point (1832, 472). Other element would receive the click: &lt;div data-v-6b3d69de="" data-v-3166c1e4="" class="el-dialog__wrapper transferCardDialog customizeDetailsDialog" style="z-index: 2015;"&gt;...&lt;/div&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.9' class='none'>
+    <td class='errorCase'><div class='testcase'>test_I_edit_countcard: 次卡编辑测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.9')" >
+        错误</a>
+
+    <div id='div_ft1.9' class="popup_window">
+        <pre>ft1.9: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 67, in test_I_edit_countcard
+    VipCard(self.driver).I_edit_countcard(self.txt)
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 106, in I_edit_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡tab']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;div id="tab-1-4-2" aria-controls="pane-1-4-2" role="tab" tabindex="-1" class="el-tabs__item is-top"&gt;...&lt;/div&gt; is not clickable at point (323, 135). Other element would receive the click: &lt;span class="el-dialog__title"&gt;...&lt;/span&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.10' class='none'>
+    <td class='errorCase'><div class='testcase'>test_J_renew_countcard: 次卡续卡测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.10')" >
+        错误</a>
+
+    <div id='div_ft1.10' class="popup_window">
+        <pre>ft1.10: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 71, in test_J_renew_countcard
+    VipCard(self.driver).J_renew_countcard(self.num[0:2])
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 120, in J_renew_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡更多']).click()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-1-4-2"]/div/div[3]/div[4]/div[2]/table/tbody/tr[1]/td[15]/div/div/button"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.11' class='none'>
+    <td class='errorCase'><div class='testcase'>test_K_takeout_countcard: 次卡扣次测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.11')" >
+        错误</a>
+
+    <div id='div_ft1.11' class="popup_window">
+        <pre>ft1.11: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 75, in test_K_takeout_countcard
+    VipCard(self.driver).K_takeout_countcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 132, in K_takeout_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡更多']).click()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-1-4-2"]/div/div[3]/div[4]/div[2]/table/tbody/tr[1]/td[15]/div/div/button"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.12' class='none'>
+    <td class='errorCase'><div class='testcase'>test_L_passon_countcard: 次卡转卡测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.12')" >
+        错误</a>
+
+    <div id='div_ft1.12' class="popup_window">
+        <pre>ft1.12: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 79, in test_L_passon_countcard
+    VipCard(self.driver).L_passon_countcard(self.num[1:3], self.phone)
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 142, in L_passon_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡更多']).click()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-1-4-2"]/div/div[3]/div[4]/div[2]/table/tbody/tr[1]/td[15]/div/div/button"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.13' class='none'>
+    <td class='errorCase'><div class='testcase'>test_M_delete_countcard: 次卡删除测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.13')" >
+        错误</a>
+
+    <div id='div_ft1.13' class="popup_window">
+        <pre>ft1.13: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 83, in test_M_delete_countcard
+    VipCard(self.driver).M_delete_countcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 155, in M_delete_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡更多']).click()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-1-4-2"]/div/div[3]/div[4]/div[2]/table/tbody/tr[1]/td[15]/div/div/button"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.14' class='none'>
+    <td class='errorCase'><div class='testcase'>test_N_activate_countcard: 次卡开卡测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.14')" >
+        错误</a>
+
+    <div id='div_ft1.14' class="popup_window">
+        <pre>ft1.14: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 87, in test_N_activate_countcard
+    VipCard(self.driver).N_activate_countcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 165, in N_activate_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡未开卡tab']).click()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-1-4-2"]/div/div[1]/span/div[5]"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.15' class='none'>
+    <td class='errorCase'><div class='testcase'>test_O_remove_countcard: 次卡彻底删除测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.15')" >
+        错误</a>
+
+    <div id='div_ft1.15' class="popup_window">
+        <pre>ft1.15: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 91, in test_O_remove_countcard
+    VipCard(self.driver).O_remove_countcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 175, in O_remove_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡回收站tab']).click()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-1-4-2"]/div/div[1]/span/div[6]"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft1.16' class='none'>
+    <td class='errorCase'><div class='testcase'>test_P_recover_countcard: 次卡恢复测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft1.16')" >
+        错误</a>
+
+    <div id='div_ft1.16' class="popup_window">
+        <pre>ft1.16: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_A_frontDeskFunction\test_d_vipcardManage.py", line 95, in test_P_recover_countcard
+    VipCard(self.driver).P_recover_countcard()
+  File "C:\Users\Administrator\UI\pages\frontDeskFunction_page\vipcard_page.py", line 187, in P_recover_countcard
+    EleManage().located_by_xpath(self.driver, self.ele['次卡回收站-更多']).click()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-1-4-2"]/div/div[3]/div[4]/div[2]/table/tbody/tr/td[15]/div/div/button"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_A_frontDeskFunction.test_e_cashierDesk.Cashier: 收银台模块测试</td>
+        <td>5</td>
+        <td>5</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c2',5)">详情</a></td>
+    </tr>
+
+<tr id='pt2.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_goods: 添加商品测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt2.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_goods: 编辑商品测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt2.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_goods_entry: 商品入库测试1</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt2.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_add_goods_entry: 商品入库测试2</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt2.5' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_E_buy_goods: 商品购买测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_B_membershipFunction.test_a_consumerManage.MemberShip: 客户管理模块测试</td>
+        <td>10</td>
+        <td>10</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c3',10)">详情</a></td>
+    </tr>
+
+<tr id='pt3.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_potential_customers: 添加潜客测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_potential_customers: 编辑潜客测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_distribute_member: 潜客分配会籍测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_distribute_coach: 潜客分配教练测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.5' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_E_delete_potential_customers: 潜客删除测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.6' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_F_recovery_potential_customers: 潜客恢复测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.7' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_G_edit_vip: 编辑会员测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.8' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_H_distribute_vipmember: 会员分配会籍测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.9' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_I_distribute_vipcoach: 会员分配教练测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt3.10' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_J_delete_vip: 删除会员测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='errorClass'>
+        <td>test_C_coachFunction.test_a_personalClass.PersonalClass: 私教课程模块测试</td>
+        <td>5</td>
+        <td>2</td>
+        <td>0</td>
+        <td>3</td>
+        <td><a href="javascript:showClassDetail('c4',5)">详情</a></td>
+    </tr>
+
+<tr id='pt4.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_perclass: 添加私教课测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt4.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_perclass: 编辑私教课测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='ft4.3' class='none'>
+    <td class='errorCase'><div class='testcase'>test_C_add_percoach: 添加私教课教练测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft4.3')" >
+        错误</a>
+
+    <div id='div_ft4.3' class="popup_window">
+        <pre>ft4.3: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_C_coachFunction\test_a_personalClass.py", line 40, in test_C_add_percoach
+    PerManagePage(self.driver).C_add_percoach(self.num[0:3])
+  File "C:\Users\Administrator\UI\pages\coachFunction_page\permanage_page.py", line 48, in C_add_percoach
+    EleManage().located_by_xpath(self.driver, self.ele['添加私教课教练按钮']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotVisibleException: Message: element not visible
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft4.4' class='none'>
+    <td class='errorCase'><div class='testcase'>test_D_edit_percoach: 编辑私教课教练测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft4.4')" >
+        错误</a>
+
+    <div id='div_ft4.4' class="popup_window">
+        <pre>ft4.4: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_C_coachFunction\test_a_personalClass.py", line 44, in test_D_edit_percoach
+    PerManagePage(self.driver).D_edit_percoach(self.num[1:3])
+  File "C:\Users\Administrator\UI\pages\coachFunction_page\permanage_page.py", line 61, in D_edit_percoach
+    target = self.driver.find_element_by_xpath(self.ele['编辑私教课带课教练按钮'])
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@class="el-table__fixed-right"]/div[2]/table/tbody/tr[1]/td[9]/div/button[2]"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft4.5' class='none'>
+    <td class='errorCase'><div class='testcase'>test_E_buy_perclass: 私教课购买测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft4.5')" >
+        错误</a>
+
+    <div id='div_ft4.5' class="popup_window">
+        <pre>ft4.5: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_C_coachFunction\test_a_personalClass.py", line 48, in test_E_buy_perclass
+    PerManagePage(self.driver).E_buy_perclass(self.end_data, self.num[0:4], self.txt, self.phone)
+  File "C:\Users\Administrator\UI\pages\coachFunction_page\permanage_page.py", line 75, in E_buy_perclass
+    target = self.driver.find_element_by_xpath(self.ele['私教课购买按钮'])
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@class="el-table__fixed-right"]/div[2]/table/tbody/tr[1]/td[9]/div/button[1]"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_C_coachFunction.test_b_personalClassPurchase.PersonalClassBuy: 私教购买模块测试</td>
+        <td>3</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c5',3)">详情</a></td>
+    </tr>
+
+<tr id='pt5.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_buy_perclass: 添加私教购买测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt5.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_perclass: 编辑私教购买测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt5.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_delete_perclass: 删除私教购买测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_C_coachFunction.test_c_personalClassOrder.PersonalClassOrder: 私教预约模块测试</td>
+        <td>2</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c6',2)">详情</a></td>
+    </tr>
+
+<tr id='pt6.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_order_perclass: 添加私教课预约测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt6.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_cancel_perclass: 取消私教课预约测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='errorClass'>
+        <td>test_C_coachFunction.test_d_groupClassManage.GroupClass: 团课模块测试</td>
+        <td>9</td>
+        <td>6</td>
+        <td>0</td>
+        <td>3</td>
+        <td><a href="javascript:showClassDetail('c7',9)">详情</a></td>
+    </tr>
+
+<tr id='pt7.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_groupclass: 添加团课测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt7.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_groupclass: 编辑团课测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt7.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_queuing_groupclass: 团课排期测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt7.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_delete_groupclass: 删除团课测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt7.5' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_E_add_queuing: 添加排期测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='ft7.6' class='none'>
+    <td class='errorCase'><div class='testcase'>test_F_edit_queuing: 编辑排期测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft7.6')" >
+        错误</a>
+
+    <div id='div_ft7.6' class="popup_window">
+        <pre>ft7.6: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_C_coachFunction\test_d_groupClassManage.py", line 62, in test_F_edit_queuing
+    GroupClassPage(self.driver).F_edit_queuing(self.end_new_time)
+  File "C:\Users\Administrator\UI\pages\coachFunction_page\groupclass_page.py", line 95, in F_edit_queuing
+    EleManage().located_by_xpath(self.driver, self.ele['编辑排期结束时间']).clear()
+  File "C:\Users\Administrator\UI\public\ele_manage.py", line 4, in located_by_xpath
+    return driver.find_element_by_xpath(ele)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 290, in find_element_by_xpath
+    return self.find_element(by=By.XPATH, value=xpath)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 744, in find_element
+    {'using': by, 'value': value})['value']
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[@id="pane-3-4-1"]/div/div[4]/div/div[2]/div/div[3]/div[3]/input"}
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='pt7.7' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_G_order_class: 预约团课测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='ft7.8' class='none'>
+    <td class='errorCase'><div class='testcase'>test_I_delete_queuing: 删除排期测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft7.8')" >
+        错误</a>
+
+    <div id='div_ft7.8' class="popup_window">
+        <pre>ft7.8: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_C_coachFunction\test_d_groupClassManage.py", line 75, in test_I_delete_queuing
+    GroupClassPage(self.driver).I_delete_queuing()
+  File "C:\Users\Administrator\UI\pages\coachFunction_page\groupclass_page.py", line 133, in I_delete_queuing
+    EleManage().located_by_xpath(self.driver, self.ele['周日选择']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;div data-v-07e605f8="" class="inner-box active"&gt;...&lt;/div&gt; is not clickable at point (1762, 474). Other element would receive the click: &lt;div data-v-513b3ee1="" class="el-dialog__wrapper course-dialog" style="z-index: 2036;"&gt;...&lt;/div&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft7.9' class='none'>
+    <td class='errorCase'><div class='testcase'>test_J_print_groupclass: 打印课表测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft7.9')" >
+        错误</a>
+
+    <div id='div_ft7.9' class="popup_window">
+        <pre>ft7.9: Traceback (most recent call last):
+  File "C:\Users\Administrator\UI\testCase\test_C_coachFunction\test_d_groupClassManage.py", line 79, in test_J_print_groupclass
+    GroupClassPage(self.driver).J_print_groupclass()
+  File "C:\Users\Administrator\UI\pages\coachFunction_page\groupclass_page.py", line 143, in J_print_groupclass
+    EleManage().located_by_xpath(self.driver, self.ele['打印课表']).click()
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 74, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webelement.py", line 457, in _execute
+    return self._parent.execute(command, params)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 233, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python37-32\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 194, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: Element &lt;button data-v-b1e5e018="" type="button" class="el-button el-button--primary el-button--medium"&gt;...&lt;/button&gt; is not clickable at point (929, 197). Other element would receive the click: &lt;div class="el-dialog__body"&gt;...&lt;/div&gt;
+  (Session info: chrome=68.0.3440.75)
+  (Driver info: chromedriver=2.41.578737 (49da6702b16031c40d63e5618de03a32ff6c197e),platform=Windows NT 6.1.7601 SP1 x86_64)
+
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_C_coachFunction.test_e_openClassManage.OpenClass: 公开课模块测试</td>
+        <td>4</td>
+        <td>4</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c8',4)">详情</a></td>
+    </tr>
+
+<tr id='pt8.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_openclass: 添加公开课</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt8.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_openclass: 编辑公开课</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt8.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_delete_openclass: 删除公开课</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt8.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_print_openclass: 打印课表</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_C_coachFunction.test_f_sideReport.SideReport: 体侧报告模块测试</td>
+        <td>4</td>
+        <td>4</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c9',4)">详情</a></td>
+    </tr>
+
+<tr id='pt9.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_sideReport: 添加体侧报告测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt9.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_sideReport: 编辑体侧报告测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt9.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_look_sideReport: 查看体测报告测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt9.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_delete_sideReport: 删除体侧报告测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_D_storeManageFunction.test_a_staffManage.TestStaff: 员工管理测试</td>
+        <td>4</td>
+        <td>4</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c10',4)">详情</a></td>
+    </tr>
+
+<tr id='pt10.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_staff: 添加员工测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt10.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_staff: 编辑员工测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt10.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_forbidden_staff: 禁用员工测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt10.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_restart_staff: 启用员工测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_E_advancedSettings.test_a_cardKindManage.TestCardManage: 卡种管理模块测试</td>
+        <td>3</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c11',3)">详情</a></td>
+    </tr>
+
+<tr id='pt11.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_card: 添加卡种测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt11.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_card: 编辑卡种测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt11.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_delete_card: 删除卡种测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_E_advancedSettings.test_b_roleManage.TestRoleManage: 角色管理模块测试</td>
+        <td>4</td>
+        <td>4</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c12',4)">详情</a></td>
+    </tr>
+
+<tr id='pt12.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_add_role: 添加角色测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt12.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_edit_role: 编辑角色测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt12.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_jurisdiction_role: 权限分配测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt12.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_delete_role: 删除角色测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_E_advancedSettings.test_c_passagePush.TestPassage: 文章推送模块测试</td>
+        <td>4</td>
+        <td>4</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c13',4)">详情</a></td>
+    </tr>
+
+<tr id='pt13.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_addpassage: 添加文章测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt13.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_editpassage: 编辑文章测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt13.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_searchpassage: 搜索文章测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt13.4' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_D_delpassage: 删除文章测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_E_advancedSettings.test_d_protocolTemplate.TestProtocol: 协议模板模块测试</td>
+        <td>3</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c14',3)">详情</a></td>
+    </tr>
+
+<tr id='pt14.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_A_edit_protocol: 编辑协议测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt14.2' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_B_restart_protocol: 重置协议测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+<tr id='pt14.3' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_C_print_protocol: 打印协议测试</div></td>
+    <td colspan='5' align='center'>通过</td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_F_registerLogin.test_a_register.TestRegister: SAAS注册测试</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c15',1)">详情</a></td>
+    </tr>
+
+<tr id='pt15.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_register: SAAS注册流程测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt15.1')" >
+        通过</a>
+
+    <div id='div_pt15.1' class="popup_window">
+        <pre>pt15.1: 注册测试开始
+注册测试结束
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+    <tr class='passClass'>
+        <td>test_F_registerLogin.test_b_login.TestLogin: SAAS登录测试</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td><a href="javascript:showClassDetail('c16',1)">详情</a></td>
+    </tr>
+
+<tr id='pt16.1' class='hiddenRow'>
+    <td class='none'><div class='testcase'>test_login: 正常登录测试</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt16.1')" >
+        通过</a>
+
+    <div id='div_pt16.1' class="popup_window">
+        <pre>pt16.1: 登录测试开始
+登录测试结束
+</pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+        <tr id='total_row'>
+            <td>总计</td>
+            <td>78</td>
+            <td>59</td>
+            <td>0</td>
+            <td>19</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+
+        <div id='ending'>&nbsp;</div>
+        
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chart'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title : {
+                text: '测试执行情况',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            color: ['#95b75d', 'grey', '#b64645'],
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['通过','失败','错误']
+            },
+            series : [
+                {
+                    name: '测试执行情况',
+                    type: 'pie',
+                    radius : '60%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:59, name:'通过'},
+                        {value:0, name:'失败'},
+                        {value:19, name:'错误'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+    
+    </div>
+</body>
+</html>
