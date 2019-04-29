@@ -1,5 +1,5 @@
-# uiAutoTest
-An uiAutoTest frame for Web（Complete: 80%）
+# ui-autotest
+An ui_autotest frame for Web
 
 image目录：用于存放测试图片
 
@@ -18,6 +18,8 @@ public目录：用于存放公共模块
     send_email.py：发送邮件模块
 
 testCase目录：用于存放测试用例
+
+report目录: 用于存放测试报告
 
 testFile目录：用于存放配置文件和上传图片exe文件
 
